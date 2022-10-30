@@ -14,10 +14,12 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import com.submission.huda.storyapps.R
 import com.submission.huda.storyapps.databinding.ActivityAddBinding
 import com.submission.huda.storyapps.helper.Config
 import com.submission.huda.storyapps.helper.reduceFileImageCameraX
@@ -64,7 +66,14 @@ class AddActivity : AppCompatActivity() {
         binding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val actionBar = supportActionBar
-        actionBar!!.title = "Tambah Story"
+        actionBar!!.title = resources.getString(R.string.tambah_data_story)
+        if (!allPermissionsGranted()) {
+            ActivityCompat.requestPermissions(
+                this,
+                REQUIRED_PERMISSIONS,
+                REQUEST_CODE_PERMISSIONS
+            )
+        }
         sharedPreferences = getSharedPreferences(Config.SHARED_PRED_NAME, Context.MODE_PRIVATE)
         val token = "Bearer " + sharedPreferences.getString(Config.TOKEN,"")
         val gallery = binding.galeri
@@ -125,6 +134,7 @@ class AddActivity : AppCompatActivity() {
         ).show()
         val intent = Intent(applicationContext, DashboardActivity::class.java)
         startActivity(intent)
+        finishAffinity()
     }
 
     private fun uploadFormulir(token: String, description: String, imageFile: File) {

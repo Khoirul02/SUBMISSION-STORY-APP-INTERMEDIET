@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.submission.huda.storyapps.R
 import com.submission.huda.storyapps.databinding.ActivityRegistrasiBinding
 import com.submission.huda.storyapps.ui.login.afterTextChanged
 
@@ -19,7 +20,7 @@ class RegistrasiActivity : AppCompatActivity() {
         binding = ActivityRegistrasiBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val actionBar = supportActionBar
-        actionBar!!.title = "Registrasi"
+        actionBar!!.title = resources.getString(R.string.reg)
         val name = binding.edRegisterName
         val username = binding.edRegisterEmail
         val password = binding.edRegisterPassword

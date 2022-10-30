@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name="app_name">Aplikasi Cerita</string>
+        <!-- Strings related to login -->
+        <string name="prompt_email">Email</string>
+        <string name="prompt_password">Kata sandi</string>
+        <string name="invalid_username">Email tidak sesuai</string>
+        <string name="invalid_password">Kata sandi harus lebih 5 karakter</string>
+        <string name="login_failed">"Login Gagal"</string>
+        <string name="loading">Tunggu…</string>
+        <string name="list_name">Nama</string>
+        <string name="description">Deskripsi</string>
+        <string name="tambah_data_story">Tambah Data Cerita</string>
+        <string name="logout">Keluar</string>
+        <string name="detail_name">Name</string>
+        <string name="image_detail">Image Detail</string>
+        <string name="galeri">GALERI</string>
+        <string name="kamera">KAMERA</string>
+        <string name="description_text">Deskripsi</string>
+        <string name="tambah">Tambah</string>
+        <string name="imageview">ImageView</string>
+        <string name="date">Date</string>
+        <string name="imageemail">ImageEmail</string>
+        <string name="email">Email</string>
+        <string name="imagepass">ImagePass</string>
+        <string name="password">Password</string>
+        <string name="login">MASUK</string>
+        <string name="belum_memiliki_akun">Belum Memiliki Akun ?</string>
+        <string name="daftar_akun">Daftar Akun</string>
+        <string name="logo">logo</string>
+        <string name="nama_lengkap">Nama Lengkap</string>
+        <string name="daftar">DAFTAR</string>
+        <string name="setting">Pengaturan</string>
+        <string name="reg">Registrasi</string>
+        <string name="detail">Detail Cerita</string>
+        <string name="appwidget_text">Spanduk Cerita</string>
+        <string name="add_widget">Tambah widget</string>
+        <string name="app_widget_description">Ini adalah deskripsi widget</string>
+        <string name="empty_text">Kosong</string>
+        <string name="widgetimage">WidgetImage</string>
+</resources>

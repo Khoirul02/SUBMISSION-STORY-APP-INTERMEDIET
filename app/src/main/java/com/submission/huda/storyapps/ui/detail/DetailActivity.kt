@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.submission.huda.storyapps.R
 import com.submission.huda.storyapps.databinding.ActivityDetailBinding
 import com.submission.huda.storyapps.helper.Config
 import com.submission.huda.storyapps.helper.formatedDate
@@ -27,7 +28,7 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val actionBar = supportActionBar
-        actionBar!!.title = "Detail Story"
+        actionBar!!.title = resources.getString(R.string.detail)
         val image = binding.ivDetailPhoto
         val title = binding.tvDetailName
         val description = binding.tvDetailDescription
