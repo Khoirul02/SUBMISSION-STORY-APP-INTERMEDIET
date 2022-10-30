@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
 import com.submission.huda.storyapps.databinding.ActivityLoginBinding
@@ -71,21 +72,34 @@ class LoginActivity : AppCompatActivity() {
             )
         }
 
-        password!!.afterTextChanged {
-            loginViewModel.loginDataChanged(
-                username.text.toString(),
-                password.text.toString()
-            )
-        }
+        password.apply {
+            this!!.afterTextChanged {
+                loginViewModel.loginDataChanged(
+                    username.text.toString(),
+                    password!!.text.toString()
+                )
+            }
 
-        login.setOnClickListener {
-            login.visibility = View.GONE
-            loading.visibility = View.VISIBLE
-            loginViewModel.login(username.text.toString(), password.text.toString())
-        }
-        registration.setOnClickListener {
-            val intent = Intent(applicationContext, RegistrasiActivity::class.java)
-            startActivity(intent)
+            setOnEditorActionListener { _, actionId, _ ->
+                when (actionId) {
+                    EditorInfo.IME_ACTION_DONE ->
+                        loginViewModel.login(
+                            username.text.toString(),
+                            password!!.text.toString()
+                        )
+                }
+                false
+            }
+
+            login.setOnClickListener {
+                login.visibility = View.GONE
+                loading.visibility = View.VISIBLE
+                loginViewModel.login(username.text.toString(), password!!.text.toString())
+            }
+            registration.setOnClickListener {
+                val intent = Intent(applicationContext, RegistrasiActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
