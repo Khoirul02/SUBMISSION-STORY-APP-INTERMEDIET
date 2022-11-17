@@ -7,5 +7,5 @@ object Config {
     const val USERID = "USERID"
     const val TOKEN = "TOKEN"
     //baseurl
-    const val BASE_URL = "https://story-api.dicoding.dev/v1/";
+    const val BASE_URL = "https://story-api.dicoding.dev/v1/"
 }

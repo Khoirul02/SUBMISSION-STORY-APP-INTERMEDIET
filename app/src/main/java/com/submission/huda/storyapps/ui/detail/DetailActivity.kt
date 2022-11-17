@@ -10,13 +10,14 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.submission.huda.storyapps.R
+import com.submission.huda.storyapps.data.Result
 import com.submission.huda.storyapps.databinding.ActivityDetailBinding
 import com.submission.huda.storyapps.helper.Config
 import com.submission.huda.storyapps.helper.formatedDate
+import com.submission.huda.storyapps.ui.ViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
@@ -42,29 +43,38 @@ class DetailActivity : AppCompatActivity() {
         val id = intent.extras!!.getString("ID_STORY")
         sharedPreferences = getSharedPreferences(Config.SHARED_PRED_NAME, Context.MODE_PRIVATE)
         val token = "Bearer " + sharedPreferences.getString(Config.TOKEN,"")
-        detailViewModel = ViewModelProvider(this).get()
+        detailViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(this))[DetailViewModel::class.java]
         id?.let { detailViewModel.getDetail(token, it) }
-        detailViewModel.detailResult.observe(this, Observer {
+        detailViewModel.getDetail(token, id.toString()).observe(this, Observer {
             val detailResult = it ?:return@Observer
-            if (detailResult.error != null) {
-                progressBar.visibility = View.GONE
-                Toast.makeText(applicationContext, detailResult.error, Toast.LENGTH_LONG).show()
-            }
-            if (detailResult.success != null) {
-                progressBar.visibility = View.GONE
-                image.visibility = View.VISIBLE
-                title.visibility = View.VISIBLE
-                description.visibility = View.VISIBLE
-                date.visibility = View.VISIBLE
-                val result = detailResult.success.detail
-                val createAt = formatedDate(result.createdAt!!)
-                Glide.with(this)
-                    .load(result.photoUrl)
-                    .apply(RequestOptions().override(512, 512))
-                    .into(image)
-                title.text = result.name
-                description.text = result.description
-                date.text = createAt
+            when (detailResult) {
+                is Result.Loading -> {
+
+                }
+                is Result.Success -> {
+                    if (detailResult.data.error == true) {
+                        progressBar.visibility = View.GONE
+                        Toast.makeText(applicationContext, detailResult.data.message, Toast.LENGTH_LONG).show()
+                    } else {
+                        progressBar.visibility = View.GONE
+                        image.visibility = View.VISIBLE
+                        title.visibility = View.VISIBLE
+                        description.visibility = View.VISIBLE
+                        date.visibility = View.VISIBLE
+                        val result = detailResult.data.story
+                        val createAt = formatedDate(result?.createdAt!!)
+                        Glide.with(this)
+                            .load(result.photoUrl)
+                            .apply(RequestOptions().override(512, 512))
+                            .into(image)
+                        title.text = result.name
+                        description.text = result.description
+                        date.text = createAt
+                    }
+                }
+                is Result.Error -> {
+                    Toast.makeText(applicationContext, detailResult.exception, Toast.LENGTH_LONG).show()
+                }
             }
         })
     }

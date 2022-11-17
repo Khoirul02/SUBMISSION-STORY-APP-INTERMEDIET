@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -40,72 +39,47 @@
                     android:orientation="vertical"
                     android:padding="10dp">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputLay_name"
+                    <EditText
+                        android:id="@+id/ed_register_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="-8dp">
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:hint="@string/nama_lengkap"
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:textSize="12sp" />
 
-                        <EditText
-                            android:id="@+id/ed_register_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:hint="@string/nama_lengkap"
-                            android:inputType="text"
-                            android:textSize="12sp"
-                            android:importantForAutofill="no" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputLay_plain"
+                    <com.submission.huda.storyapps.helper.MyEditTextUsername
+                        android:id="@+id/ed_register_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/inputLay_name"
-                        android:layout_marginStart="-8dp">
+                        android:layout_below="@+id/ed_register_name"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:hint="@string/email"
+                        android:importantForAutofill="no"
+                        android:inputType="textEmailAddress"
+                        android:textSize="12sp" />
 
-                        <EditText
-                            android:id="@+id/ed_register_email"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:hint="@string/email"
-                            android:inputType="textEmailAddress"
-                            android:textSize="12sp"
-                            android:importantForAutofill="no" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputLay_plain_2"
+                    <com.submission.huda.storyapps.helper.MyEditTextPassword
+                        android:id="@+id/ed_register_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/inputLay_plain"
-                        app:passwordToggleEnabled="true"
-                        android:layout_marginStart="-8dp">
-
-                        <EditText
-                            android:id="@+id/ed_register_password"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:hint="@string/password"
-                            android:inputType="textPassword"
-                            android:textSize="12sp"
-                            android:importantForAutofill="no" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
+                        android:layout_below="@+id/ed_register_email"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:hint="@string/password"
+                        android:importantForAutofill="no"
+                        android:inputType="textPassword"
+                        android:textSize="12sp" />
+                    
                     <Button
                         android:id="@+id/daftar"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="250dp"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/inputLay_plain_2"
+                        android:layout_below="@+id/ed_register_password"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="20dp"
@@ -122,7 +96,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/daftar"
                         android:layout_marginVertical="20dp"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>

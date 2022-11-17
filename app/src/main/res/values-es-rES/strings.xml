@@ -38,4 +38,7 @@
     <string name="app_widget_description">Esta es una descripción del widget de la aplicación.</string>
     <string name="empty_text">Vacío</string>
     <string name="widgetimage">WidgetImage</string>
+    <string name="data_kosong">Datos en blanco</string>
+    <string name="title_activity_maps">Maps</string>
+    <string name="maps">Maps</string>
 </resources>

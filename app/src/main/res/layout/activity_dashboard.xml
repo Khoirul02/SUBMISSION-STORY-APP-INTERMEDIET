@@ -18,6 +18,25 @@
         android:layout_height="150dp"
         android:layout_centerInParent="true"
         android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/ivEmpty"
+        android:src="@drawable/empty"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/tvEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivEmpty"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:text="@string/data_kosong"
+        />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

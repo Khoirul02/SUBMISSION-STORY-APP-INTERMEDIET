@@ -16,11 +16,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.submission.huda.storyapps.R
 import com.submission.huda.storyapps.adapter.ListStoryAdapter
+import com.submission.huda.storyapps.data.Result
 import com.submission.huda.storyapps.databinding.ActivityDashboardBinding
 import com.submission.huda.storyapps.helper.Config
 import com.submission.huda.storyapps.model.ListStoryItem
+import com.submission.huda.storyapps.model.StoryResponse
+import com.submission.huda.storyapps.ui.ViewModelFactory
 import com.submission.huda.storyapps.ui.add.AddActivity
 import com.submission.huda.storyapps.ui.login.LoginActivity
+import com.submission.huda.storyapps.ui.maps.MapsActivity
 
 @Suppress("UNCHECKED_CAST")
 @SuppressLint("NotifyDataSetChanged")
@@ -43,41 +47,62 @@ class DashboardActivity : AppCompatActivity() {
         rvStory.adapter = adapter
         sharedPreferences = getSharedPreferences(Config.SHARED_PRED_NAME, Context.MODE_PRIVATE)
         val token = "Bearer " + sharedPreferences.getString(Config.TOKEN,"")
-        dashboardViewModel = ViewModelProvider(this)[DashboardViewModel::class.java]
-        dashboardViewModel.storyResult.observe(this, Observer {
+        dashboardViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(this))[DashboardViewModel::class.java]
+        dashboardViewModel.getAllStory(token, 1, 10).observe(this, Observer {
             val storyResult = it ?:return@Observer
-            if (storyResult.error != null) {
-                Toast.makeText(applicationContext, storyResult.error, Toast.LENGTH_LONG).show()
-            }
-            if (storyResult.success != null) {
-                progressBar.visibility = View.GONE
-                viewContentStory(storyResult.success)
+            when (storyResult) {
+                is Result.Loading -> {
+
+                }
+                is Result.Success -> {
+                    if (storyResult.data.error == true) {
+                        Toast.makeText(applicationContext, storyResult.data.message, Toast.LENGTH_LONG).show()
+                    } else {
+                        progressBar.visibility = View.GONE
+                        viewContentStory(storyResult.data)
+                    }
+                }
+                is Result.Error -> {
+                    Toast.makeText(applicationContext, storyResult.exception, Toast.LENGTH_LONG).show()
+                }
             }
         })
-        getData(token)
+        getData(token, 1,10)
         add.setOnClickListener {
             val intent = Intent(applicationContext, AddActivity::class.java)
             startActivity(intent)
         }
     }
 
-    private fun getData(token : String) {
-        dashboardViewModel.getAllStory(token)
+    private fun getData(token : String, page : Int, size : Int) {
+        dashboardViewModel.getAllStory(token, page, size)
     }
 
-    private fun viewContentStory(data: ListStoryView) {
-        adapter.setData(data.listStory as ArrayList<ListStoryItem>)
+    private fun viewContentStory(data: StoryResponse) {
+        if(data.listStory!!.isNotEmpty()) {
+            adapter.setData(data.listStory as ArrayList<ListStoryItem>)
+        } else {
+            binding.ivEmpty.visibility = View.VISIBLE
+            binding.tvEmpty.visibility = View.VISIBLE
+        }
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_logout) {
-            onLogout(applicationContext)
-        } else if (item.itemId == R.id.action_change_settings) {
-            val mIntent = Intent(Settings.ACTION_LOCALE_SETTINGS)
-            startActivity(mIntent)
+        when (item.itemId) {
+            R.id.action_logout -> {
+                onLogout(applicationContext)
+            }
+            R.id.action_change_settings -> {
+                val mIntent = Intent(Settings.ACTION_LOCALE_SETTINGS)
+                startActivity(mIntent)
+            }
+            R.id.action_maps -> {
+                val mIntent = Intent(applicationContext, MapsActivity::class.java)
+                startActivity(mIntent)
+            }
         }
         return super.onOptionsItemSelected(item)
     }

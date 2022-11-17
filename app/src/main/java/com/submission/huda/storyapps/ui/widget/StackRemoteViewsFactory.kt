@@ -8,20 +8,24 @@ import androidx.core.os.bundleOf
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.submission.huda.storyapps.R
-import com.submission.huda.storyapps.helper.getDataBanner
 import com.submission.huda.storyapps.model.ListStoryItem
 import kotlinx.coroutines.runBlocking
 
 class StackRemoteViewsFactory(private val mContext: Context) : RemoteViewsService.RemoteViewsFactory {
     private var mWidgetItems = ArrayList<ListStoryItem>()
-    private var data = getDataBanner(mContext)
+//    private lateinit var storyRepository : StoryRepository
     override fun onCreate() {
         fetchData()
     }
 
     private fun fetchData() {
         runBlocking {
-            mWidgetItems = data
+//            storyRepository = StoryRepository()
+//            val data = getDataBanner(mContext, storyRepository)
+//            if (data is Result.Success){
+//                mWidgetItems = data.data.listStory as ArrayList<ListStoryItem>
+//            }
+            // No Action Data
         }
     }
 

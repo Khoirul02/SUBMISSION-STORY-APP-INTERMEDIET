@@ -38,4 +38,7 @@
         <string name="app_widget_description">Ini adalah deskripsi widget</string>
         <string name="empty_text">Kosong</string>
         <string name="widgetimage">WidgetImage</string>
+        <string name="data_kosong">Data Kosong</string>
+        <string name="title_activity_maps">Maps</string>
+        <string name="maps">Maps</string>
 </resources>

@@ -4,17 +4,23 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Patterns
 import android.view.View
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.submission.huda.storyapps.R
 import com.submission.huda.storyapps.databinding.ActivityRegistrasiBinding
-import com.submission.huda.storyapps.ui.login.afterTextChanged
+import com.submission.huda.storyapps.helper.MyEditTextPassword
+import com.submission.huda.storyapps.helper.MyEditTextUsername
+import com.submission.huda.storyapps.ui.ViewModelFactory
 
 class RegistrasiActivity : AppCompatActivity() {
     private lateinit var registrasiViewModel: RegistrasiViewModel
     private lateinit var binding: ActivityRegistrasiBinding
+    private lateinit var myEditTextUsername: MyEditTextUsername
+    private lateinit var myEditTextPassword: MyEditTextPassword
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrasiBinding.inflate(layoutInflater)
@@ -22,22 +28,13 @@ class RegistrasiActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title = resources.getString(R.string.reg)
         val name = binding.edRegisterName
-        val username = binding.edRegisterEmail
-        val password = binding.edRegisterPassword
         val daftar = binding.daftar
         val loading = binding.loading
+        myEditTextUsername = findViewById(R.id.ed_register_email)
+        myEditTextPassword = findViewById(R.id.ed_register_password)
         playAnimation()
-        registrasiViewModel = ViewModelProvider(this)[RegistrasiViewModel::class.java]
-        registrasiViewModel.regFormState.observe(this, Observer {
-            val regState = it ?: return@Observer
-            daftar.isEnabled = regState.isDataValid
-            if (regState.usernameError != null) {
-                username.error = getString(regState.usernameError)
-            }
-            if (regState.passwordError != null) {
-                password.error = getString(regState.passwordError)
-            }
-        })
+        setMyButtonEnable()
+        registrasiViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(this))[RegistrasiViewModel::class.java]
         registrasiViewModel.regResult.observe(this, Observer {
             val regResult = it ?: return@Observer
             loading.visibility = View.GONE
@@ -48,32 +45,17 @@ class RegistrasiActivity : AppCompatActivity() {
             if (regResult.success != null) {
                 daftar.visibility = View.VISIBLE
                 name.setText("")
-                username.setText("")
-                password.setText("")
+                myEditTextUsername.setText("")
+                myEditTextPassword.setText("")
                 showToastTrue(regResult.success)
             }
         })
-        username.afterTextChanged {
-            registrasiViewModel.loginDataChanged(
-                username.text.toString(),
-                password.text.toString()
-            )
-        }
-
-        password.apply {
-            afterTextChanged {
-                registrasiViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
         daftar.setOnClickListener {
             daftar.visibility = View.GONE
             loading.visibility = View.VISIBLE
-            registrasiViewModel.reg(name.text.toString(),username.text.toString(), password.text.toString())
+            registrasiViewModel.registration(name.text.toString(),myEditTextUsername.text.toString(), myEditTextPassword.text.toString())
         }
     }
-}
     private fun playAnimation() {
         ObjectAnimator.ofFloat(binding.ivLogo, View.TRANSLATION_X, -30f, 30f).apply {
             duration = 6000
@@ -89,13 +71,45 @@ class RegistrasiActivity : AppCompatActivity() {
             playSequentially(together)
             start()
         }
+        binding.edRegisterName.addTextChangedListener(onTextChanged = { _, _, _, _ ->
+            setMyButtonEnable()
+        })
+        myEditTextPassword.addTextChangedListener(onTextChanged = { _, _, _, _ ->
+            setMyButtonEnable()
+        })
+        myEditTextUsername.addTextChangedListener(onTextChanged = { _, _, _, _ ->
+            setMyButtonEnable()
+        })
     }
 
-    private fun showToast(error: String) {
+    private fun setMyButtonEnable() {
+        val name = binding.edRegisterName.text
+        val username = myEditTextUsername.text
+        val password = myEditTextPassword.text
+        val enabled = isUserNameValid(username.toString()) && isPasswordValid(password.toString()) && isUserFullName(name.toString())
+        binding.daftar.isEnabled = enabled
+    }
+
+    // A placeholder fullname
+    private fun isUserFullName(name: String): Boolean {
+        return name.isNotEmpty()
+    }
+
+    // A placeholder username validation check
+    private fun isUserNameValid(username: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(username).matches()
+    }
+
+    // A placeholder password validation check
+    private fun isPasswordValid(password: String): Boolean {
+        return password.length > 5
+    }
+
+    private fun showToast(error: String?) {
         Toast.makeText(applicationContext, error, Toast.LENGTH_LONG).show()
     }
-    private fun showToastTrue(model: RegistrasiView) {
-        val message = model.message
+    private fun showToastTrue(model: RegistrasiView?) {
+        val message = model?.message
         // TODO : initiate successful logged in experience
         Toast.makeText(
             applicationContext,

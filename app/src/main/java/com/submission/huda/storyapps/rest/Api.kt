@@ -6,41 +6,48 @@ import com.submission.huda.storyapps.model.RegistrasiResponse
 import com.submission.huda.storyapps.model.StoryResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
 import retrofit2.http.*
 
 interface Api {
     @FormUrlEncoded
     @POST("login")
-    fun loginUser(
+    suspend fun loginUser(
         @Field("email") username : String,
         @Field("password") password : String
-    ):Call<LoginResponse>
+    ): LoginResponse
 
     @FormUrlEncoded
     @POST("register")
-    fun regUser(
+    suspend fun regUser(
         @Field("name") name : String,
         @Field("email") username : String,
         @Field("password") password : String
-    ):Call<RegistrasiResponse>
+    ):RegistrasiResponse
 
     @GET("stories")
-    fun getAllStory(
+    suspend fun getAllStory(
         @Header("Authorization") token: String,
-    ):Call<StoryResponse>
+    ):StoryResponse
+
+    @GET("stories")
+    suspend fun getAllStoryAndLocation(
+        @Header("Authorization") token: String,
+        @Query("location") location : Int
+    ):StoryResponse
 
     @GET("stories/{id}")
-    fun getDetailStory(
+    suspend fun getDetailStory(
         @Header("Authorization") token: String,
         @Path("id") id : String
-    ):Call<DetailResponse>
+    ):DetailResponse
 
     @Multipart
     @POST("stories")
-    fun postStory(
+    suspend fun postStory(
         @Header("Authorization") token: String,
+        @Part("lat") lat: Float,
+        @Part("lon") lon: Float,
         @Part("description") description: RequestBody,
         @Part file: MultipartBody.Part,
-    ):Call<RegistrasiResponse>
+    ):RegistrasiResponse
 }

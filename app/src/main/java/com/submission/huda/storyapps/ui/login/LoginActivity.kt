@@ -1,22 +1,25 @@
 package com.submission.huda.storyapps.ui.login
+
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Bundle
+import android.util.Patterns
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.Toast
+import com.submission.huda.storyapps.R
 import com.submission.huda.storyapps.databinding.ActivityLoginBinding
 import com.submission.huda.storyapps.helper.Config
+import com.submission.huda.storyapps.helper.MyEditTextPassword
+import com.submission.huda.storyapps.helper.MyEditTextUsername
+import com.submission.huda.storyapps.ui.ViewModelFactory
 import com.submission.huda.storyapps.ui.dashboard.DashboardActivity
 import com.submission.huda.storyapps.ui.registration.RegistrasiActivity
 
@@ -25,33 +28,25 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
     private lateinit var sharedPreferences: SharedPreferences
-
+    private lateinit var myEditTextPassword: MyEditTextPassword
+    private lateinit var myEditTextUsername: MyEditTextUsername
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar!!.hide()
         sharedPreferences = getSharedPreferences(Config.SHARED_PRED_NAME, Context.MODE_PRIVATE)
-        val username = binding.edLoginEmail
-        val password = binding.edLoginPassword
         val login = binding.login
         val loading = binding.loading
         val registration = binding.tvDaftar
+        myEditTextUsername = findViewById(R.id.ed_login_email)
+        myEditTextPassword = findViewById(R.id.ed_login_password)
         playAnimation()
-        loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
-
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
-            val loginState = it ?: return@Observer
-            // disable login button unless both username / password is valid
-             login.isEnabled = loginState.isDataValid
-            if (loginState.usernameError != null) {
-                username!!.error = getString(loginState.usernameError)
-            }
-            if (loginState.passwordError != null) {
-                password!!.error = getString(loginState.passwordError)
-            }
-        })
-
+        setMyButtonEnable()
+        loginViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory.getInstance(this)
+        )[LoginViewModel::class.java]
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
             loading.visibility = View.GONE
@@ -65,42 +60,41 @@ class LoginActivity : AppCompatActivity() {
             }
         })
 
-        username!!.afterTextChanged {
-            loginViewModel.loginDataChanged(
-                username.text.toString(),
-                password!!.text.toString()
+        login.setOnClickListener {
+            login.visibility = View.GONE
+            loading.visibility = View.VISIBLE
+            loginViewModel.login(
+                myEditTextUsername.text.toString(),
+                myEditTextPassword.text.toString()
             )
         }
-
-        password.apply {
-            this!!.afterTextChanged {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password!!.text.toString()
-                )
-            }
-
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
-                            username.text.toString(),
-                            password!!.text.toString()
-                        )
-                }
-                false
-            }
-
-            login.setOnClickListener {
-                login.visibility = View.GONE
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password!!.text.toString())
-            }
-            registration.setOnClickListener {
-                val intent = Intent(applicationContext, RegistrasiActivity::class.java)
-                startActivity(intent)
-            }
+        registration.setOnClickListener {
+            val intent = Intent(applicationContext, RegistrasiActivity::class.java)
+            startActivity(intent)
         }
+        myEditTextPassword.addTextChangedListener(onTextChanged = { _, _, _, _ ->
+            setMyButtonEnable()
+        })
+        myEditTextUsername.addTextChangedListener(onTextChanged = { _, _, _, _ ->
+            setMyButtonEnable()
+        })
+    }
+
+    private fun setMyButtonEnable() {
+        val username = myEditTextUsername.text
+        val password = myEditTextPassword.text
+        val enable = isUserNameValid(username.toString()) && isPasswordValid(password.toString())
+        binding.login.isEnabled = enable
+    }
+
+    // A placeholder username validation check
+    private fun isUserNameValid(username: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(username).matches()
+    }
+
+    // A placeholder password validation check
+    private fun isPasswordValid(password: String): Boolean {
+        return password.length > 5
     }
 
     @SuppressLint("Recycle")
@@ -122,9 +116,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     @SuppressLint("CommitPrefEdits")
-    private fun showLoginTrue(model: LoggedInUserView) {
-        val message = model.message
-        val data = model.dataSession
+    private fun showLoginTrue(model: LoggedInUserView?) {
+        val message = model?.message
+        val data = model?.dataSession
         val editor: SharedPreferences.Editor? = sharedPreferences.edit()
         editor!!.putString(Config.NAME, data!!.name)
         editor.putString(Config.USERID, data.userId)
@@ -148,19 +142,4 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-}
-
-/**
- * Extension function to simplify setting an afterTextChanged action to EditText components.
- */
-fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
-        }
-
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
 }

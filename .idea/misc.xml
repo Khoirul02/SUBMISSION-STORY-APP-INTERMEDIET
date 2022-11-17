@@ -3,16 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/drawable/bg_button.xml" value="0.1" />
+        <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/drawable/bg_button_disable.xml" value="0.1" />
         <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/drawable/layout_bg.xml" value="0.1025" />
+        <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/drawable/view.xml" value="0.1" />
         <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout-w1240dp/activity_login.xml" value="0.22" />
         <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout-w936dp/activity_login.xml" value="0.33" />
         <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_add.xml" value="0.22" />
         <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_camera.xml" value="0.4322916666666667" />
-        <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_dashboard.xml" value="0.33" />
+        <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_dashboard.xml" value="0.15833333333333333" />
         <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_detail.xml" value="0.22" />
         <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_detail_bundle.xml" value="0.10572916666666667" />
-        <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_login.xml" value="0.27488151658767773" />
-        <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_registrasi.xml" value="0.33" />
+        <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_maps.xml" value="0.1" />
+        <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_registrasi.xml" value="0.25" />
         <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/activity_splash_screen.xml" value="0.20416666666666666" />
         <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/custom_dialog_loading.xml" value="0.11666666666666667" />
         <entry key="..\:/DICODING-Android-Intermediet/StoryApps/app/src/main/res/layout/image_banner_widget.xml" value="0.1" />
