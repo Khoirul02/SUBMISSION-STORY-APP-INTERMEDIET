@@ -1,6 +1,5 @@
 package com.submission.huda.storyapps.adapter
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
@@ -9,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.app.ActivityOptionsCompat
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -16,14 +17,7 @@ import com.submission.huda.storyapps.R
 import com.submission.huda.storyapps.model.ListStoryItem
 import com.submission.huda.storyapps.ui.detail.DetailActivity
 
-@SuppressLint("NotifyDataSetChanged")
-class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ListViewHolder>() {
-    private val mData = ArrayList<ListStoryItem>()
-    fun setData(items: ArrayList<ListStoryItem>) {
-        mData.clear()
-        mData.addAll(items)
-        notifyDataSetChanged()
-    }
+class ListStoryAdapter : PagingDataAdapter<ListStoryItem, ListStoryAdapter.ListViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ListViewHolder {
         val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_data, viewGroup, false)
@@ -31,12 +25,11 @@ class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ListViewHolder>()
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.bind(mData[position])
+        val mData = getItem(position)
+        mData?.let { holder.bind(it) }
     }
 
-    override fun getItemCount(): Int = mData.size
-
-    inner class ListViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+    class ListViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         private val photo : ImageView = itemView.findViewById(R.id.iv_item_photo)
         val name : TextView = itemView.findViewById(R.id.tv_item_name)
         val description : TextView = itemView.findViewById(R.id.tv_item_description)
@@ -53,5 +46,17 @@ class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ListViewHolder>()
                 itemView.context.startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(itemView.context as Activity).toBundle())
             }
         }
+    }
+    companion object {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<ListStoryItem> =
+            object : DiffUtil.ItemCallback<ListStoryItem>() {
+                override fun areItemsTheSame(oldUser: ListStoryItem, newUser: ListStoryItem): Boolean {
+                    return oldUser.id == newUser.id
+                }
+
+                override fun areContentsTheSame(oldUser: ListStoryItem, newUser: ListStoryItem): Boolean {
+                    return oldUser == newUser
+                }
+            }
     }
 }

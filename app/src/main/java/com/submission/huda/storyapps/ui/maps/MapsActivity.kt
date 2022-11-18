@@ -94,9 +94,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapsActivityViewModel.getAllStoryLatLong(token, 1).observe(this, Observer {
             val storyResult = it ?: return@Observer
             when (storyResult) {
-                is Result.Loading -> {
-
-                }
                 is Result.Success -> {
                     if (storyResult.data.error == true) {
                         Toast.makeText(applicationContext, storyResult.data.message, Toast.LENGTH_LONG).show()

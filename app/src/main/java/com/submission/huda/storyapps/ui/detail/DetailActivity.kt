@@ -48,9 +48,6 @@ class DetailActivity : AppCompatActivity() {
         detailViewModel.getDetail(token, id.toString()).observe(this, Observer {
             val detailResult = it ?:return@Observer
             when (detailResult) {
-                is Result.Loading -> {
-
-                }
                 is Result.Success -> {
                     if (detailResult.data.error == true) {
                         progressBar.visibility = View.GONE

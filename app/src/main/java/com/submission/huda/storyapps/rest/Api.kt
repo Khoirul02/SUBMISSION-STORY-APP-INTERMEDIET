@@ -1,9 +1,6 @@
 package com.submission.huda.storyapps.rest
 
-import com.submission.huda.storyapps.model.DetailResponse
-import com.submission.huda.storyapps.model.LoginResponse
-import com.submission.huda.storyapps.model.RegistrasiResponse
-import com.submission.huda.storyapps.model.StoryResponse
+import com.submission.huda.storyapps.model.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.*
@@ -27,7 +24,16 @@ interface Api {
     @GET("stories")
     suspend fun getAllStory(
         @Header("Authorization") token: String,
+        @Query("page") page : Int,
+        @Query("size") size : Int
     ):StoryResponse
+
+    @GET("stories")
+    suspend fun getAllStoryPage(
+        @Header("Authorization") token: String,
+        @Query("page") page : Int,
+        @Query("size") size : Int
+    ): List<ListStoryItem>
 
     @GET("stories")
     suspend fun getAllStoryAndLocation(

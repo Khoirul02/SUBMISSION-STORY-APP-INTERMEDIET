@@ -4,27 +4,25 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.submission.huda.storyapps.R
 import com.submission.huda.storyapps.adapter.ListStoryAdapter
-import com.submission.huda.storyapps.data.Result
 import com.submission.huda.storyapps.databinding.ActivityDashboardBinding
 import com.submission.huda.storyapps.helper.Config
-import com.submission.huda.storyapps.model.ListStoryItem
-import com.submission.huda.storyapps.model.StoryResponse
 import com.submission.huda.storyapps.ui.ViewModelFactory
 import com.submission.huda.storyapps.ui.add.AddActivity
 import com.submission.huda.storyapps.ui.login.LoginActivity
 import com.submission.huda.storyapps.ui.maps.MapsActivity
+import kotlinx.coroutines.launch
 
 @Suppress("UNCHECKED_CAST")
 @SuppressLint("NotifyDataSetChanged")
@@ -41,55 +39,32 @@ class DashboardActivity : AppCompatActivity() {
         val rvStory = binding.rvStory
         val add = binding.add
         progressBar.visibility = View.VISIBLE
-        adapter = ListStoryAdapter()
-        adapter.notifyDataSetChanged()
-        rvStory.layoutManager = LinearLayoutManager(applicationContext)
-        rvStory.adapter = adapter
+        rvStory.layoutManager = LinearLayoutManager(this)
         sharedPreferences = getSharedPreferences(Config.SHARED_PRED_NAME, Context.MODE_PRIVATE)
-        val token = "Bearer " + sharedPreferences.getString(Config.TOKEN,"")
-        dashboardViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(this))[DashboardViewModel::class.java]
-        dashboardViewModel.getAllStory(token, 1, 10).observe(this, Observer {
-            val storyResult = it ?:return@Observer
-            when (storyResult) {
-                is Result.Loading -> {
-
-                }
-                is Result.Success -> {
-                    if (storyResult.data.error == true) {
-                        Toast.makeText(applicationContext, storyResult.data.message, Toast.LENGTH_LONG).show()
-                    } else {
-                        progressBar.visibility = View.GONE
-                        viewContentStory(storyResult.data)
-                    }
-                }
-                is Result.Error -> {
-                    Toast.makeText(applicationContext, storyResult.exception, Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-        getData(token, 1,10)
+        val token = "Bearer " + sharedPreferences.getString(Config.TOKEN, "")
+        dashboardViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory.getInstance(this)
+        )[DashboardViewModel::class.java]
+        adapter = ListStoryAdapter()
+        rvStory.adapter = adapter
+        rvStory.setHasFixedSize(true)
+        Log.d("Token", token)
+        dashboardViewModel.getAllStory(token).observe(this) {
+            progressBar.visibility = View.GONE
+            adapter.submitData(lifecycle,it)
+        }
         add.setOnClickListener {
             val intent = Intent(applicationContext, AddActivity::class.java)
             startActivity(intent)
         }
     }
 
-    private fun getData(token : String, page : Int, size : Int) {
-        dashboardViewModel.getAllStory(token, page, size)
-    }
-
-    private fun viewContentStory(data: StoryResponse) {
-        if(data.listStory!!.isNotEmpty()) {
-            adapter.setData(data.listStory as ArrayList<ListStoryItem>)
-        } else {
-            binding.ivEmpty.visibility = View.VISIBLE
-            binding.tvEmpty.visibility = View.VISIBLE
-        }
-    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_logout -> {

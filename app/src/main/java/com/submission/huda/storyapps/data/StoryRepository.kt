@@ -3,10 +3,11 @@ package com.submission.huda.storyapps.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import com.submission.huda.storyapps.model.DetailResponse
-import com.submission.huda.storyapps.model.LoginResponse
-import com.submission.huda.storyapps.model.RegistrasiResponse
-import com.submission.huda.storyapps.model.StoryResponse
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
+import com.submission.huda.storyapps.model.*
 import com.submission.huda.storyapps.rest.Api
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -27,21 +28,20 @@ class StoryRepository(private val api: Api) {
         }
     }
 
-    fun listStory(token : String, page : Int, size : Int) : LiveData<Result<StoryResponse>> = liveData {
-        emit(Result.Loading)
-        try {
-            val response = api.getAllStory(token)
-            val data = StoryResponse(error = response.error, message = response.message, listStory = response.listStory)
-            emit(Result.Success(data))
-        } catch (e: Exception) {
-            Log.d("Story Repository", "Get List: ${e.message.toString()} ")
-            emit(Result.Error(e.message.toString()))
-        }
+    fun listStoryPage(token: String) : LiveData<PagingData<ListStoryItem>> {
+        return  Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            pagingSourceFactory = {
+                StoryPagingSource(api, token)
+            }
+        ).liveData
     }
 
     suspend fun listStoryBanner(token : String, page : Int, size : Int) : Result<StoryResponse> {
         return try {
-            val response = api.getAllStory(token)
+            val response = api.getAllStory(token, page, size)
             val data = StoryResponse(error = response.error, message = response.message, listStory = response.listStory)
             Result.Success(data)
         } catch (e: Exception) {
@@ -51,7 +51,6 @@ class StoryRepository(private val api: Api) {
     }
 
     fun listStoryLatLong(token : String, location : Int) : LiveData<Result<StoryResponse>> = liveData {
-        emit(Result.Loading)
         try {
             val response = api.getAllStoryAndLocation(token, location)
             val data = StoryResponse(error = response.error, message = response.message, listStory = response.listStory)
@@ -93,7 +92,6 @@ class StoryRepository(private val api: Api) {
     }
 
     fun actionDetailStory(token : String ,id : String) : LiveData<Result<DetailResponse>> = liveData {
-        emit(Result.Loading)
         try {
             val response = api.getDetailStory(token, id)
             val data = DetailResponse(error = response.error, message = response.message, story = response.story)
