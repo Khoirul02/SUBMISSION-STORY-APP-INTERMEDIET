@@ -1,8 +1,10 @@
 1. LoginViewModelTest
 a. Ketika berhasil login.
     - Memastikan mengembalikan Result.Success.
+    - Mengisikan value object success di LoginResult
 b. Ketika gagal login.
     - Memastikan mengembalikan Result.Error.
+    - Mengisikan value object error di LoginResult
 2. DashboardViewModelTest
    Test story paging list story.
 3. DetailViewModelTest
@@ -10,3 +12,22 @@ a. Ketika berhasil dapat detail data.
     - Memastikan mengembalikan Result.Success.
 b. Ketika gagal dapat detail data.
     - Memastikan mengembalikan Result.Error.
+4. MapsActivityViewModelTest
+a. Ketika berhasil dapat list story.
+    - Memastikan mengembalikan Result.Success.
+b. Ketika gagal dapat data list story.
+    - Memastikan mengembalikan Result.Error.
+5. RegistrasiViewModelTest
+a. Ketika berhasil registrasi.
+    - Memastikan mengembalikan Result.Success.
+    - Mengisikan value object success di RegistrasiResult
+b. Ketika gagal registrasi.
+    - Memastikan mengembalikan Result.Error.
+    - Mengisikan value object error di RegistrasiResult
+6. AddViewModelTest
+a. Ketika berhasil tambah story.
+    - Memastikan mengembalikan Result.Success.
+    - Mengisikan value object success di AddResult
+b. Ketika gagal tambah story.
+    - Memastikan mengembalikan Result.Error.
+    - Mengisikan value object error di AddResult
