@@ -40,4 +40,8 @@
     <string name="data_kosong">Blank Data</string>
     <string name="title_activity_maps">Maps</string>
     <string name="maps">Maps</string>
+    <string name="retry">Try Again</string>
+    <string name="label_name">labelMaps</string>
+    <string name="imgmaps">ImgMaps</string>
+    <string name="detailMaps">Detail</string>
 </resources>

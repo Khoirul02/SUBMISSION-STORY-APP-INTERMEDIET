@@ -41,4 +41,8 @@
     <string name="data_kosong">Datos en blanco</string>
     <string name="title_activity_maps">Maps</string>
     <string name="maps">Maps</string>
+    <string name="retry">Try Agos</string>
+    <string name="label_name">labelMaps</string>
+    <string name="imgmaps">ImgMaps</string>
+    <string name="detailMaps">Detail</string>
 </resources>

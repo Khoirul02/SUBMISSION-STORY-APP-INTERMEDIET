@@ -1,0 +1,12 @@
+1. LoginViewModelTest
+a. Ketika berhasil login.
+    - Memastikan mengembalikan Result.Success.
+b. Ketika gagal login.
+    - Memastikan mengembalikan Result.Error.
+2. DashboardViewModelTest
+   Test story paging list story.
+3. DetailViewModelTest
+a. Ketika berhasil dapat detail data.
+    - Memastikan mengembalikan Result.Success.
+b. Ketika gagal dapat detail data.
+    - Memastikan mengembalikan Result.Error.

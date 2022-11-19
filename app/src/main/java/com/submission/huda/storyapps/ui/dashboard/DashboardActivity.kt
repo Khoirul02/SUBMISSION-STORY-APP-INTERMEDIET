@@ -6,23 +6,21 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.submission.huda.storyapps.R
 import com.submission.huda.storyapps.adapter.ListStoryAdapter
+import com.submission.huda.storyapps.adapter.LoadingStateAdapter
 import com.submission.huda.storyapps.databinding.ActivityDashboardBinding
 import com.submission.huda.storyapps.helper.Config
 import com.submission.huda.storyapps.ui.ViewModelFactory
 import com.submission.huda.storyapps.ui.add.AddActivity
 import com.submission.huda.storyapps.ui.login.LoginActivity
 import com.submission.huda.storyapps.ui.maps.MapsActivity
-import kotlinx.coroutines.launch
 
 @Suppress("UNCHECKED_CAST")
 @SuppressLint("NotifyDataSetChanged")
@@ -46,10 +44,14 @@ class DashboardActivity : AppCompatActivity() {
             this,
             ViewModelFactory.getInstance(this)
         )[DashboardViewModel::class.java]
+        rvStory.setHasFixedSize(true)
         adapter = ListStoryAdapter()
         rvStory.adapter = adapter
-        rvStory.setHasFixedSize(true)
-        Log.d("Token", token)
+        rvStory.adapter= adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
         dashboardViewModel.getAllStory(token).observe(this) {
             progressBar.visibility = View.GONE
             adapter.submitData(lifecycle,it)

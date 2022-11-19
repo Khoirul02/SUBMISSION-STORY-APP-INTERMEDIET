@@ -29,13 +29,6 @@ interface Api {
     ):StoryResponse
 
     @GET("stories")
-    suspend fun getAllStoryPage(
-        @Header("Authorization") token: String,
-        @Query("page") page : Int,
-        @Query("size") size : Int
-    ): List<ListStoryItem>
-
-    @GET("stories")
     suspend fun getAllStoryAndLocation(
         @Header("Authorization") token: String,
         @Query("location") location : Int
